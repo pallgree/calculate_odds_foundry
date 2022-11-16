@@ -6,7 +6,8 @@ contract LP {
     uint256 public multiplier = 1e6;
     uint256 public margin = 50000;
     uint256[3] public ratiosWin;
-    uint256 public totalPayOut;
+    uint256 public maxPayOut;
+    uint256[3] public payOut;
 
     constructor(uint256[3] memory _ratio) {
         ratiosWin = _ratio;
@@ -18,7 +19,7 @@ contract LP {
         uint256[3] memory _odds = calculateOdd(_amount, _outcome);
         if (_odds[_outcome] <= multiplier) revert OverMaxAmountBet();
         if (
-            totalPayOut + (_amount * _odds[_outcome]) / multiplier >=
+            maxPayOut + (_amount * _odds[_outcome]) / multiplier >=
             liquidity + _amount
         ) revert NotEnoughLiquidity();
         for (uint8 i = 0; i < 3; i++) {
@@ -36,14 +37,9 @@ contract LP {
             }
         }
         liquidity += _amount;
-        totalPayOut += (_amount * _odds[_outcome]) / multiplier;
-        emit PlaceBet(
-            _amount,
-            _odds[_outcome],
-            _outcome,
-            liquidity,
-            totalPayOut
-        );
+        payOut[_outcome] += (_amount * _odds[_outcome]) / multiplier;
+
+        emit PlaceBet(_amount, _odds[_outcome], _outcome, liquidity, maxPayOut);
     }
 
     function calculateOdd(uint256 _amount, uint8 _outcome)
@@ -71,6 +67,18 @@ contract LP {
                 (_odds[2] * multiplier) / (multiplier + margin)
             ]
         );
+    }
+
+    function max(uint256[3] memory list) public pure returns(uint256 rs) {
+        if (list[0] >= list[1] && list[0] >= list[2]){
+            rs= list[0];
+        }else
+        if (list[1] >= list[0] && list[1] >= list[2]){
+            rs= list[0];
+        }else
+        if (list[2] >= list[1] && list[2] >= list[0]){
+            rs= list[0];
+        }
     }
 
     event PlaceBet(

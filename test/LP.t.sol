@@ -38,29 +38,30 @@ contract TestLP is Test {
          console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
         lp.placeBet(1e12, 0);
         console.log("");
-         console.log("3.--place bet amount 1e8 with outcome 1--");
+         console.log("3.--place bet amount 1e13 with outcome 1--");
         odds = lp.calculateOdd(0,0);
         console.log("odds before:",odds[0],odds[1],odds[2]);
         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(1e8,1);
+        odds = lp.calculateOdd(1e13,1);
         console.log("odds after:",odds[0],odds[1],odds[2]);
          console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(1e8, 1);
+        lp.placeBet(1e13, 1);
 
         console.log("");
-         console.log("4.--place bet amount 3e9 with outcome 2--");
+         console.log("4.--place bet amount 1e13 with outcome 2--");
         odds = lp.calculateOdd(0,0);
         console.log("odds before:",odds[0],odds[1],odds[2]);
         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(3e9,2);
+        odds = lp.calculateOdd(1e13,2);
         console.log("odds after:",odds[0],odds[1],odds[2]);
          console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(3e9, 2);
+        lp.placeBet(1e13, 2);
 
 
         console.log(""); console.log("");
-        console.log("liquidity + netBet - payOut = ",lp.liquidity() - lp.totalPayOut());
+        console.log("liquidity + netBet - maxPayOut = ",lp.liquidity() - lp.maxPayOut());
         console.log("totalNetBet =", lp.liquidity() - uint256(1e11));
+        console.log("totalNetBet / reinforcement =", (lp.liquidity() - uint256(1e11) )/ uint256(1e11));
 
 
 
