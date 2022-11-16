@@ -11,13 +11,59 @@ contract TestLP is Test {
     
 
     function setUp() public {
-         uint256[3] memory _odds = [uint256(45000000), uint256(25000000), uint256(30000000)];
+         uint256[3] memory _ratio = [uint256(45000000), uint256(25000000), uint256(30000000)];
          vm.prank(owner);
-         lp = new LP(_odds);
+         lp = new LP(_ratio);
+         console.log("-------- reinforcement: 1e11 -----------");
+         console.log("");
     }
 
-    // function testPlaceBet() public {
-    //     vm.prank(owner);
-    //     lp.placeBet(200000000, 0);
-    // }                           
+    function testPlaceBet1() public {
+        vm.startPrank(owner);
+        console.log("1.--place bet amount 2e8 with outcome 0--");
+        uint256[3] memory odds = lp.calculateOdd(0,0);
+        console.log("odds before:",odds[0],odds[1],odds[2]);
+        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        odds = lp.calculateOdd(2e8,0);
+        console.log("odds after:",odds[0],odds[1],odds[2]);
+         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        lp.placeBet(2e8, 0);
+        console.log("");
+         console.log("2.--place bet amount 1e12 with outcome 0--");
+        odds = lp.calculateOdd(0,0);
+        console.log("odds before:",odds[0],odds[1],odds[2]);
+        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        odds = lp.calculateOdd(1e12,0);
+        console.log("odds after:",odds[0],odds[1],odds[2]);
+         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        lp.placeBet(1e12, 0);
+        console.log("");
+         console.log("3.--place bet amount 1e8 with outcome 1--");
+        odds = lp.calculateOdd(0,0);
+        console.log("odds before:",odds[0],odds[1],odds[2]);
+        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        odds = lp.calculateOdd(1e8,1);
+        console.log("odds after:",odds[0],odds[1],odds[2]);
+         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        lp.placeBet(1e8, 1);
+
+        console.log("");
+         console.log("4.--place bet amount 3e9 with outcome 2--");
+        odds = lp.calculateOdd(0,0);
+        console.log("odds before:",odds[0],odds[1],odds[2]);
+        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        odds = lp.calculateOdd(3e9,2);
+        console.log("odds after:",odds[0],odds[1],odds[2]);
+         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
+        lp.placeBet(3e9, 2);
+
+
+        console.log(""); console.log("");
+        console.log("liquidity + netBet - payOut = ",lp.liquidity() - lp.totalPayOut());
+        console.log("totalNetBet =", lp.liquidity() - uint256(1e11));
+
+
+
+    }     
+                          
 }
