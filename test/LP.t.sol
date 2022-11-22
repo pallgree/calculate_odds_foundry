@@ -1,70 +1,43 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
 import {LP} from "../src/LP.sol";
 
 contract TestLP is Test {
     LP lp;
+
     address owner = 0x9B853D7cCE80FFeCf0aCB6408f11cdD3243bbBdB;
     address alice = 0xDe8fF72681B9AD66e116Bc3558E3e20da251d5dE;
-    
+    uint256[] _ratio0 = [
+        uint256(45000000),
+        uint256(10000000),
+        uint256(30000000),
+        uint256(10000000),
+        uint256(5000000)
+    ];
+
+    uint256[] _ratio1 = [
+        uint256(0),
+        uint256(0),
+        uint256(0),
+        uint256(0),
+        uint256(0)
+    ];
 
     function setUp() public {
-         uint256[3] memory _ratio = [uint256(45000000), uint256(25000000), uint256(30000000)];
-         vm.prank(owner);
-         lp = new LP(_ratio);
-         console.log("-------- reinforcement: 1e11 -----------");
-         console.log("");
+        vm.prank(owner);
+        lp = new LP();
+        lp.createEvent(_ratio0, _ratio1, 5);
+        lp.createEvent(_ratio0, _ratio1, 5);
     }
 
     function testPlaceBet1() public {
-        vm.startPrank(owner);
-        console.log("1.--place bet amount 2e8 with outcome 0--");
-        uint256[3] memory odds = lp.calculateOdd(0,0);
-        console.log("odds before:",odds[0],odds[1],odds[2]);
-        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(2e8,0);
-        console.log("odds after:",odds[0],odds[1],odds[2]);
-         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(2e8, 0);
-        console.log("");
-         console.log("2.--place bet amount 1e12 with outcome 0--");
-        odds = lp.calculateOdd(0,0);
-        console.log("odds before:",odds[0],odds[1],odds[2]);
-        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(1e12,0);
-        console.log("odds after:",odds[0],odds[1],odds[2]);
-         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(1e12, 0);
-        console.log("");
-         console.log("3.--place bet amount 1e13 with outcome 1--");
-        odds = lp.calculateOdd(0,0);
-        console.log("odds before:",odds[0],odds[1],odds[2]);
-        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(1e13,1);
-        console.log("odds after:",odds[0],odds[1],odds[2]);
-         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(1e13, 1);
-
-        console.log("");
-         console.log("4.--place bet amount 1e13 with outcome 2--");
-        odds = lp.calculateOdd(0,0);
-        console.log("odds before:",odds[0],odds[1],odds[2]);
-        console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        odds = lp.calculateOdd(1e13,2);
-        console.log("odds after:",odds[0],odds[1],odds[2]);
-         console.log("1+m:",1e12/odds[0]+1e12/odds[1]+1e12/odds[2]);
-        lp.placeBet(1e13, 2);
-
-
-        console.log(""); console.log("");
-        console.log("liquidity + netBet - maxPayOut = ",lp.liquidity() - lp.maxPayOut());
-        console.log("totalNetBet =", lp.liquidity() - uint256(1e11));
-        console.log("totalNetBet / reinforcement =", (lp.liquidity() - uint256(1e11) )/ uint256(1e11));
-
-
-
-    }     
-                          
+        lp.placeBet(10000e6, 0, 0);
+        lp.placeBet(10000e6, 1, 0);
+        lp.placeBet(10000e6, 2, 0);
+        lp.placeBet(10000e6, 3, 0);
+        lp.placeBet(10000e6, 4, 0);
+        lp.placeBet(80000e6, 0, 0);
+    }
 }
